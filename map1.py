@@ -9,7 +9,7 @@ from folium.plugins import MarkerCluster, MiniMap
 import pandas as pd
 import numpy as np
 
-my_info_df = pd.read_csv('비급여_도수치료_서울_강남구.csv')
+my_info_df = pd.read_csv('비급여_도수치료_서울.csv')
 
 data_for_draw = my_info_df.loc[:, ['병원명', '명칭', '최저비용', '최고비용', 'Xpos', 'Ypos']]
 
