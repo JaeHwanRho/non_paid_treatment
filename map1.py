@@ -63,7 +63,6 @@ def fancy_html(row):
         }
         .table_text_right{
             display: table-cell;
-            vertical-align: middle;
             margin-left:0px; /* 왼쪽 margin 10px */
             color:black;
             background-color:#fffffff;
@@ -71,18 +70,16 @@ def fancy_html(row):
     </style>
     <i class="fa-solid fa-house-chimney-medical"></i>
 </head>
-    <table style="height: 120px; width: 200px;">
+<table style="height: 70px; width: 100%;">
 <tbody>
 <tr>
 <td style="background-color: """+ left_col_colour +""";"><span class='table_text_left'>명칭</span></td>
-<td class='table_text_right'>{}</td>""".format(treatment) + """
-</tr>
-<tr>
 <td style="background-color: """+ left_col_colour +""";"><span class='table_text_left'>최저비용</span></td>
-<td class='table_text_right'>{}</td>""".format(low_price + ' 원') + """
+<td style="background-color: """+ left_col_colour +""";"><span class='table_text_left'>최고비용</span></td>
 </tr>
 <tr>
-<td style="background-color: """+ left_col_colour +""";"><span class='table_text_left'>최고비용</span></td>
+<td class='table_text_right'>{}</td>""".format(treatment) + """
+<td class='table_text_right'>{}</td>""".format(low_price + ' 원') + """
 <td class='table_text_right'>{}</td>""".format(high_price + ' 원') + """
 </tr>
 </tbody>
@@ -105,7 +102,7 @@ for i in range(0,len(data_for_draw_except_nan)):
 
     html = fancy_html(i)
 
-    iframe = branca.element.IFrame(html=html,width=210,height=200)
+    iframe = branca.element.IFrame(html=html,width=270,height=200)
     popup = folium.Popup(iframe,parse_html=True)
 
     folium.Marker([data_for_draw_except_nan['Ypos'].iloc[i], data_for_draw_except_nan['Xpos'].iloc[i]],
