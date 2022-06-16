@@ -9,19 +9,20 @@ from folium.plugins import MarkerCluster, MiniMap
 import pandas as pd
 import numpy as np
 
+pd.set_option('mode.chained_assignment',  None)
+
 my_info_df = pd.read_csv('비급여_도수치료_서울.csv')
 
-data_for_draw = my_info_df.loc[:, ['병원명', '명칭', '최저비용', '최고비용', 'Xpos', 'Ypos']]
+data_for_draw = my_info_df.loc[:, ['병원명', '명칭', '최저비용', '최고비용', 'Xpos', 'Ypos', 'id_kakaomap']].copy()
 
-data_for_draw_except_nan = data_for_draw.dropna()
+data_for_draw_except_nan = data_for_draw.dropna().copy()
 
 data_for_draw_except_nan['최고비용_str'] = data_for_draw_except_nan['최고비용'].str.replace(',', '')
 data_for_draw_except_nan['최저비용_str'] = data_for_draw_except_nan['최저비용'].str.replace(',', '')
 
 data_for_draw_except_nan['최고비용_int'] = data_for_draw_except_nan['최고비용_str'].astype(int)
 data_for_draw_except_nan['최저비용_int'] = data_for_draw_except_nan['최저비용_str'].astype(int)
-
-type(data_for_draw_except_nan['최저비용_int'][0])
+data_for_draw_except_nan['id_kakaomap'] = data_for_draw_except_nan['id_kakaomap'].astype(str)
 
 ## from tqdm import tqdm
 from folium import Marker
@@ -34,6 +35,7 @@ mc = MarkerCluster()
 hospital_name = list(data_for_draw_except_nan['병원명'])
 lat = list(data_for_draw_except_nan['Ypos'])
 lon = list(data_for_draw_except_nan['Xpos'])
+id_kakaomap = list(data_for_draw_except_nan['id_kakaomap'])
 
 def fancy_html(row):
     i = row
@@ -44,6 +46,7 @@ def fancy_html(row):
     treatment = data_for_draw_except_nan['명칭'].iloc[i]
     low_price = data_for_draw_except_nan['최저비용'].iloc[i]
     high_price = data_for_draw_except_nan['최고비용'].iloc[i]
+    id_kakaomap = data_for_draw_except_nan['id_kakaomap'].iloc[i]
 
     left_col_colour = "#ffffff"
     right_col_colour = "#ffffff"
@@ -65,7 +68,19 @@ def fancy_html(row):
             display: table-cell;
             margin-left:0px; /* 왼쪽 margin 10px */
             color:black;
-            background-color:#fffffff;
+            background-color:#FFFFFF;
+        }
+        .kakaomap_icon {
+            background-color: #FFFFFF ; /* 16px x 16px */
+            background-repeat: no-repeat;  /* make the background image appear only once */
+            background-position: 0px 0px;  /* equivalent to 'top left' */
+            border: none;           /* assuming we don't want any borders */
+            cursor: pointer;        /* make the cursor like hovering over an <a> element */
+            height: 30px;           /* make this the size of your image */
+            width: 30px;     /* make text start to the right of the image */
+            padding: 10px;
+            float: right;
+            vertical-align: middle; /* align the text vertically centered */
         }
     </style>
     <i class="fa-solid fa-house-chimney-medical"></i>
@@ -84,6 +99,10 @@ def fancy_html(row):
 </tr>
 </tbody>
 </table>
+<a href=""" + "https://place.map.kakao.com/" + id_kakaomap + """ target="_blank">
+    <button type="button" class="kakaomap_icon"><img class="kakaomap_icon" src="https://play-lh.googleusercontent.com/Nvrf8Z89_3S8H6YnOLgyAbe-PSSeCZnJDA8zv7LY04hEvi8atTgp_fmQ5RZ591Qpxh5G" height=30px width=30px></button>
+</a>
+
 </html>
 """
     return html
